@@ -1,1 +1,16 @@
-一、
+一、React组件的生命周期
+    1.装载过程(组件第一次在DOM树中渲染的过程)
+        constructor
+        getInitialState
+        getDefaultProps
+        componentWillMount
+        render
+        compnentDidMount
+    2.更新过程（组件被重新渲染的过程）
+        componentWillReceiveProps
+        shouldComponentUpdate
+        componentWillUpdate
+        render
+        componentDidUpdate
+    3.卸载过程（组件从DOM中删除的过程）
+        componentWillUnmount
