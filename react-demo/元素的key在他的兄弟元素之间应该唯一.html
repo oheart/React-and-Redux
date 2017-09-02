@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>元素的key在他的兄弟元素之间应该唯一</title>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-with-addons.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/babel-standalone/6.23.1/babel.min.js
+
+"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+        // 数组元素中使用的key在兄弟之间应该是独一无二的。然后，它们不需要是全局唯一的。但我们生成两个不同的数组时，我们可以使用相同的键。
+        function Blog(props){
+            const  sidebar = (
+              <ul>
+                  {
+                    props.posts.map((post) =>
+                        <li key={post.id}>
+                            {post.title}
+                        </li>
+                    )
+                  }
+              </ul>
+            );
+            const content = props.posts.map((post) =>
+                <div key={post.id}>
+                    <h3>{post.title}</h3>
+                    <p>{post.content}</p>
+                </div>
+            );
+            return (
+               <div>
+                    {sidebar}
+                    <hr/>
+                    {content}
+               </div>
+            )
+        }
+
+        const posts = [
+           {id:1,title:'Hello World',content:'Welcome to learing React!'},
+           {id:2,title:'Installation',content:'You can install React from npm.'}
+        ]
+        ReactDOM.render(
+          <Blog  posts={posts}/>,
+          document.getElementById('root')
+        );
+
+        // key会作为给React的提示，但不会传递给你的组件。如果您的组件中需要使用和key相同的值，请将其作为属性传递，例如：
+       /*  const content = posts.map((post) =>
+          <Post key={post.id} id={post.id} title={post.title}/>
+        ); */
+    </script>
+  </body>
+</html>

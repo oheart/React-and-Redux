@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>与运算符</title>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-with-addons.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/babel-standalone/6.23.1/babel.min.js
+
+"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      //  之所以能这样做，是因为在Javascript中，true && expression 总是返回expression，而
+      //  false && expression总是返回false.
+      
+       function Mailbox(props){
+          const unreadMessages = props.unreadMessages;
+          return (
+            <div>
+                <h1>Hello!</h1>
+                {
+                  unreadMessages.length > 0 && 
+                  <h2>
+                      You have {unreadMessages.length} unread messages.
+                  </h2>
+                }
+            </div>
+          )
+       }
+       const messages = ['React','Re:React','Re:Re:React'];
+       ReactDOM.render(
+         <Mailbox unreadMessages={messages}/>,
+         document.getElementById('root')
+       );
+    </script>
+  </body>
+</html>

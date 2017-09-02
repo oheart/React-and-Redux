@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>textarea</title>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-with-addons.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/babel-standalone/6.23.1/babel.min.js
+
+"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+    // 在React中，<textarea>会用value属性来代替。这样的话，表单中的<textarea>非常类似于使用单行输入的表单。
+    class EssayForm extends React.Component{
+       constructor(props){
+         super(props);
+         this.state = {
+           value: 'Please write an essay about your favorite DOM element.'
+         };
+         this.handleChange = this.handleChange.bind(this);
+         this.handleSubmit  this.handleSubmit.bind(this);
+       }
+       handleChange(event){
+         this.setState({value: event.target.value})
+       }
+       handleSubmit(event){
+         alert('An essay was submitted:' + this.state.value);
+         event.preventDefault();
+       }
+       render(){
+         return (
+           <form onSubmit={this.handleSubmit}>
+              <label>
+                  Name:
+                  <textarea value={this.state.value} onChange={this.handleChange}/>
+              </label>
+              <input type="submit" value="Submit"/>
+           </form>
+         )
+       }
+    }
+    ReactDOM.render(
+        <EssayForm/>,
+        document.getElementById('root')
+    );
+    </script>
+  </body>
+</html>

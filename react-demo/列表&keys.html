@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>列表&keys</title>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-with-addons.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/babel-standalone/6.23.1/babel.min.js
+
+"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+       // 渲染多样的组件-可以使用{}在JSX中构建一个元素集合
+        function ListItem(props){
+            return <li>{props.value}</li>;
+        }
+
+        // 当你在map()方法内部调用的元素时，最好随时记得为每一个元素加上一个独一无二的key.
+        function NumberList(props){
+          const numbers = props.numbers;
+          const listItems = numbers.map((number) =>
+             <ListItems key={number.toString()} value={number}/>
+          );
+          return (
+            <ul>{listItems}</ul>
+          )
+        }
+
+        const numbers = [1,2,3,4,5];
+        ReactDOM.render(
+            <NumberList numbers={numbers}/>,
+            document.getElementById('root')
+        );
+    </script>
+  </body>
+</html>

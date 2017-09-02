@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>添加第二个输入框</title>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-with-addons.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/babel-standalone/6.23.1/babel.min.js
+
+"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      //  在React中，状态分享是通过将state数据提升至离需要这些数据的组件最近的父组件来完成的。这就是所谓的状态提升。
+      const scaleNames = {
+         c: 'Celsius',
+         f: 'Fahrenheit'
+      }
+      function toCelsius(fahrenheit){
+        return (fahrenheit - 32) * 5/9;
+      }
+      function toFahrenheit(celsius){
+        return (celsius * 9 /5) + 32;
+      }
+      function tryCovert(temperature,convert){
+         const input   = parseFloat(temperature);
+         if(Number.isNaN(input)){
+           return '';
+         }
+         const output = convert(input);
+         const rounded = Math.round(output * 1000)/1000;
+         return rounded.toString();
+      }
+      function BoilingVerdict(props){
+        if(props.celsius >= 100){
+            return <p>The water would boil.</p>;
+        }
+        return <p>The water would not boil.</p>;
+      }
+      class TemperatureInput extends React.Component{
+         constructor(props){
+           super(props);
+           this.handleChange = this.handleChange.bind(this);
+         }
+         handleChange(e){
+           this.props.onTemperatureChange(e.target.value);
+         }
+         render(){
+           const temperature = this.props.temperature;
+           const scale = this.props.scale;
+           return (
+              <fieldset>
+                  <legend>Enter temperature in {scaleNames[scale]}:</legend>
+                  <input value={temperature}
+                          onChange={this.handleChange} />
+              </fieldset>
+           )
+         }
+      }
+      class Calculator extends React.Component{
+         constructor(props){
+           super(props);
+           this.handleCelsiusChange = this.handleCelsiusChange.bind(this);
+           this.handleFahrenheitChange = this.handleFahrenheitChange.bind(this);
+           this.state = {temperature: '', scale: 'c'};
+         }
+         handleCelsiusChange(temperature){
+           this.setState({scale:'c',temperature});
+         }
+         handleFahrenheitChange(temperature){
+           this.setState({scale:'f',temperature})
+         }
+         render(){
+           const scale = this.state.scale;
+           const temperature = this.state.temperature;
+           const celsius = scale === 'f' ? tryCovert(temperature,toCelsius) : temperature;
+           const fahrenheit = scale === 'c' ? tryCovert(temperature,toFahrenheit) : temperature;
+           return (
+              <div>
+                  <TemperatureInput
+                      scale="c"
+                      temperature={celsius}
+                      onTemperatureChange={this.handleCelsiusChange} />
+                  <TemperatureInput
+                      scale="f"
+                      temperature={fahrenheit}
+                      onTemperatureChange={this.handleFahrenheitChange} />
+                  <BoilingVerdict
+                      celsius={parseFloat(celsius)} />    
+              </div>
+           )
+         }
+      }
+      ReactDOM.render(
+          <Calculator/>,
+          document.getElementById('root')
+      ); 
+      /*在React应用中，对应任何可变数据理应只有一个单一“数据源”。通常，状态都是首先添加在需要渲染数据的组件中。此时，如果另一个组件也需要这些数据，你可以将数据提升至离它们最近的父组件中。你应该在应用中保持自上而下的数据流，而不是尝试在不同组件中同步状态。*/
+    </script>
+  </body>
+</html>

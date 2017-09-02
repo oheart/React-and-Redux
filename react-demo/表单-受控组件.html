@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>表单-受控组件</title>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-with-addons.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/babel-standalone/6.23.1/babel.min.js
+
+"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      /*   在HTML中，像<input/>,<textarea>和<select>这类表单元素会维持自身状态，并根据用户输入进行更新。但在React中，可变的状态通常保存在组件的状态属性中，并且只能用setState()方法进行更新。
+        我们通过使react变成一种单一数据的状态来结合二者。React负责渲染表单的组件仍然限制用户后续输入时所发生的变化。相应的，其值由React控制的输入表单元素称为"受控组件"的形式。 */
+     class NameForm extends React.Component{
+        constructor(props){
+          super(props);
+          this.state = {value:''};
+          this.handleChange = this.handleChange.bind(this);
+          this.handleSubmit = this.handleSubmit.bind(this);
+        }
+
+        handleChange(event){
+          this.setState({value:event.target.value});
+        }
+
+        handleSubmit(event){
+          alert('A name was submitted:' + this.state.value);
+          event.preventDefault();
+        }
+        render(){
+          return (
+            <form onSubmit={this.handleSubmit}>
+                <label>
+                    Name:
+                    <input type="text" value={this.state.value} onChange={this.handleChange}/>
+                </label>
+                <input type="submit"/>
+            </form>
+          )
+        }
+     }
+
+     ReactDOM.render(
+        <NameForm/>,
+        document.getElementById('root')
+     );   
+    </script>
+  </body>
+</html>

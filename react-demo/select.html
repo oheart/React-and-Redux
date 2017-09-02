@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>select</title>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-with-addons.min.js
+
+"></script>
+      <script src="https://cdn.bootcss.com/babel-standalone/6.23.1/babel.min.js
+
+"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      //  在REact中，会在根select标签上而不是当前的selected属性上使用value属性
+      class FlavorForm extends React.Component{
+          constructor(props){
+             super(props);
+             this.state = {value: 'coconut'};
+
+             this.handleChange = this.handleChange.bind(this);
+             this.handleSubmit = this.handleSubmit.bind(this);
+          }
+
+          handleChange(event){
+              this.setState({value: event.target.value});
+          }
+
+          handleSubmit(event){
+              alert('Your favorite flavor is:' + this.state.value);
+              event.preventDefault();
+          }
+
+          render(){
+             return (
+                 <form onSubmit={this.handleSubmit}>
+                      <label>
+                          Pick your favorite La Croix flavor:
+                          <select value={this.state.value} onChange={this.handleChange}>
+                              <option value="grapefruit">grapefruit</option>
+                              <option value="lime">lime</option>
+                              <option value="coconut">coconut</option>
+                              <option value="mango">mango</option>
+                          </select>
+                      </label>
+                      <input type="submit" value="Submit"/>
+                 </form>
+             )
+          }
+      }
+      ReactDOM.render(
+         <FlavorForm/>,
+         document.getElementById('root')
+      );
+    //   总之，<input type="text">,<textarea>和<select>都十分类似-它们都通过传入一个value属性来实现对组件的控制
+    </script>
+  </body>
+</html>
