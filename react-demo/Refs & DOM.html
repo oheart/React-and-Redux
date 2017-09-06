@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Refs和DOM</title>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-with-addons.min.js"></script>
+      <script src="https://cdn.bootcss.com/babel-standalone/6.23.1/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+         /* 在典型的React数据流中，属性（props）是父组件与子代交互的唯一方式。要修改子组件，你需要通过通用新的props重新渲染它。
+          但是，在某些情况下你需要在典型数据流外强制修改子代。要修改的子代可以是React组件实例，也可以是DOM元素。对于这两个情况，
+          React提供了解决方法。
+              1.何时使用Refs：
+              下面是几个适合使用refs的情况：
+                   处理焦点、文本选择或媒体控制。
+                   触发强制动画。
+                   集成第三方DOM库。
+              例如，不要在Dialog组件上直接暴露open()或close()方法，最好传递isOpen属性。
+              2.不要过度使用Refs
+              你可能首先会想到你的应用程序中使用refs来更新组件。如果是这种情况，请花一点时间，更多的关注在组件层中使用state。
+              在组件层中，通常较高级别的state更为清晰。*/
+       //一、为DOM元素添加Ref:
+         /*  React支持给任意组件添加特殊属性。ref属性接受一个回调函数，它在组件被加载或卸载时会立即执行。当给HTML元素添加ref属性时，
+           ref回调接受了底层的DOM元素作为参数。例如，下面的代码使用ref回调来存储DOM节点的引用*/
+
+        class CustomTextInput extends React.Component{
+            constructor(props){
+                super(props);
+                this.focus = this.focus.bind(this);
+            }
+            focus(){
+                //直接使用原生API使text输入框获得焦点
+                this.textInput.focus();
+            }
+            render(){
+//                使用`ref`的回调将text输入框的DOM节点存储到React
+//                  实例上(比如this.textInput)
+                return (
+                        <div>
+                             <input
+                                type="text"
+                                ref={(input) => {this.textInput = input;}}/>
+                             <input
+                                type="button"
+                                value="Focus the txt input"
+                                onClick={this.focus}/>
+                        </div>
+                );
+            }
+        }
+
+       // 二、为类组件添加Ref(这种方法仅对class声明的CustomTextInput有效)
+        /* 但ref属性用于使用class声明的自定义组件时，ref的回调接收的是已经加载的React实例。例如，如果我们想修改CustomTextInput
+        组件，实现它在加载后立即点击的效果。*/
+
+        class AutoFocusTextInput extends React.Component{
+            componentDidMount(){
+                this.textInput.focus();
+            }
+            render(){
+                return (
+                    <CustomTextInput
+                        ref={(input) => {this.textInput = input}}/>
+                )
+            }
+        }
+
+        //三、Refs与函数式组件
+       //你不能在函数式组件上使用ref属性，因为它们没有实例。但是你可以在函数式组件内部使用ref，只要它指向一个DOM元素或者class组件。
+       function CustomTextInput(props){
+            //这里必须声明textInput，这样ref回调才能引用它
+            let textInput = null;
+            function handleClick(){
+                textInput.focus();
+            }
+            return (
+                    <div>
+                       <input
+                            type="text"
+                            ref={(input) => {textInput = input;}}/>
+                      <input
+                            type="button"
+                            value="Focus the text input"
+                            onClick={handleClick}/>
+                    </div>
+            )
+       }
+
+       //四、对父组件暴露DOM节点
+       /*在极少数情况下，你可能希望从父组件访问子节点的DOM节点。通常不建议这样做，因为它会破坏组件的封装，但偶尔也可用于触发
+       或测量子DOM节点的大小和位置。虽然你可以向子组件添加ref，但这不是一个理想的解决方案，因为你可能获取组件实例而不是DOM节点。
+       并且，它还在函数式组件上无效。相反，这种情况下，我们建议在子节点上暴露一个特殊的属性。子节点将会获得一个函数属性，并将其
+       作为ref属性附加到DOM节点。这允许父代通过中间件将ref回调给子代的DOM节点。*/
+
+          //适用于类组件和函数式组件
+         function CustomTextInput(props){
+             return (
+                     <div>
+                       <input ref={props.inputRef}/>
+                     </div>
+             )
+         }
+          class Parent extends React.Component{
+              render(){
+                  return (
+                      <CustomTextInput
+                          inputRef = {el => this.inputElement = el}/>
+                  )
+              }
+          }
+
+          /*上面的例子中，Parent将它的ref回调作为一个特殊的inputRef传递给CustomTextInput，然后CustomTextInput通过
+          ref属性将其传递给<input/>。最终，parent中的this.inputElement将被设置为与CustomTextInput中的<input>元素相对应
+          的DOM节点。请注意，上面实例中的inputRef属性没有特殊的含义，它只是一般的组件属性。然而，使用<input>本身的ref属性
+          很重要，因为它告诉React将ref附加到它的DOM节点。即使CustomTextInput是一个函数式组件，它也同样有效。这种模式的另
+          一个好处是它能作用很深。假如有个Parent组件不需要DOM节点A，但是某个渲染Parent的组件（我们称之为Grandparent）需要通过
+          它访问。这时我们可以让Grandparent传递inputRef个Parent组件，然后让Parent组件将其转发给CustomInput.*/
+          function CustomTextInput(props){
+              return (
+                      <div>
+                         <input ref={props.inputRef}/>
+                      </div>
+              )
+          }
+          function Parent(props){
+              return (
+                      <div>
+                         My input: <CustomTextInput inputRef={props.inputRef}/>
+                      </div>
+              )
+          }
+          class Grandparent extends React.Component{
+              render(){
+                  return (
+                      <Parent
+                          inputRef={el => this.inputElement = el}/>
+                  )
+              }
+          }
+
+      /*上面的例子中，Grandparent首先指定了ref回调函数。它通过一个常规的inputRef属性被传递到Parent，Parent也同样把它
+          传递给了CustomTextInput.最后CustomTextInput读取了inputRef属性并将传递的函数作为ref属性附加到<input>。最终，
+          Grandparent中的this.inputElement被设置为CustomTextInput的input对应的DOM节点。总而言之，我们建议尽可能不暴露DOM
+          节点，但这是一个有用的解决方式。请注意，此方法要求您向子组件添加一些代码，如果你无法完全控制子组件，最后的办法是
+          使用findDOMNode()，但是不推荐这样做。*/
+    </script>
+  </body>
+</html>
