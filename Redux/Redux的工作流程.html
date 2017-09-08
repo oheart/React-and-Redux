@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redux的工作流程</title>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-with-addons.min.js"></script>
+      <script src="https://cdn.bootcss.com/babel-standalone/6.23.1/babel.min.js"></script>
+  </head>
+  <body>
+    <img src="img/Redux-Process.jpg"/>
+    <script type="text/babel">
+        /*Redux工作流程:*/
+//            首先，用户发出Action.
+                store.dispatch(action);
+
+//            然后，Store自动调用Reducer，并且传入两个参数：当前State和收到的Action.Reducer会返回新的State.
+                let nextState = todoApp(previousState,action);
+
+//            state一旦有变化，Store就会调用监听函数。
+                store.subscribe(listener);
+
+//            listener可以通过store.getState()得到当前状态。如果使用的是React，这时可以触发重新渲染View.
+                function  listener(){
+                    let newState = store.getState();
+                    component.setState(newState);
+                 }
+
+
+
+
+
+
+
+
+
+    </script>
+  </body>
+</html>
