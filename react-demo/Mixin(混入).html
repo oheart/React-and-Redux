@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mixin(混入)</title>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+      <script src="https://cdn.bootcss.com/react/15.4.2/react-with-addons.min.js"></script>
+      <script src="https://cdn.bootcss.com/babel-standalone/6.23.1/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="example"></div>
+    <script type="text/babel">
+          /*当一个组件想要每隔一段时间更新，那么最简单的方法就是使用setInterval()。但更重要的是，如果后续代码
+          中不需要这个功能，为了节省内存，你应该把它删除。React提供了生命周期方法，这样你就可以知道某一个组件
+          什么时候要被创建或者什么时候会被销毁。我们先来创建一个使用setInterval()的混入，它会在组件销毁的时候也
+          销毁。*/
+         /* 如果一个组件有多个混入，且其中几个混入中定义了相同的生命周期方法（比如都会在组件被摧毁的时候执行），
+          那么这些生命周期方法是一定会被调用的。通过混入定义的方法，执行顺序也与定义时的顺序一致，且会在组件上
+          的方法执行之后再执行。*/
+          var SetIntervalMixin = {
+              componentWillMount: function(){
+                  this.intervals = [];
+              },
+              setInterval: function(){
+                  this.intervals.push(setInterval.apply(null,arguments));
+              },
+              componentWillUnmout: function(){
+                  this.intervals.forEach(clearInterval);
+              }
+          }
+          var createReactClass = require('create-react-class');
+          var TickTock = createReactClass({
+               mixins:[SetIntervalMixin], //使用混入
+               getInitialState:function(){
+                   return {seconds: 0};
+               },
+              componentDidMount: function(){
+                  this.setInterval(this.tick,1000); //调用混入的方法
+              },
+              tick: function(){
+                  this.setInterval(this.tick,1000); //调用混入的方法
+              },
+               render: function(){
+                   return (
+                           <p>
+                             React has been running for {this.state.seconds} seconds.
+                           </p>
+                   )
+               }
+          });
+          ReactDOM.render(
+              <TickTock/>,
+              document.getElementById('example')
+          );
+    </script>
+  </body>
+</html>
