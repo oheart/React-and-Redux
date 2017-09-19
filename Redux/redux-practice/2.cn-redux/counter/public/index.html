@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Redux Counter Example</title>
+    <body>
+        <div id="root"></div>
+        <script>
+            // 考点一、forEach和map
+          /*   ["1a","b2","3c"].forEach(function(e){console.log(parseInt(e))});
+            console.log(['1a','b2','3c'].map(parseInt)) */
+
+            // 考点二、hasOwnProperty和isPrototypeOf
+            /* hasOwnProperty确定某个对象是否具有带指定名称的属性，如果object具有带指定名称的属性，
+            则hasOwnProperty方法返回true，否则返回false,此方法不会检查对象原型链中的属性，该属性必须是对象本身的一个成员。
+            isPrototypeOf方法用于测试一个对象是否存在于另一个对象的原型链上。 */
+           /*  function a(){
+                this.b = 'test1';
+            }
+            a.prototype.c = function(){
+                this.d  = 'test2';
+            }
+            var e = new a();
+            e.f = 'test3';
+            console.log(e.hasOwnProperty('b'));    // true
+            console.log(e.hasOwnProperty('c'));    // false
+            console.log(e.hasOwnProperty('f'));    // true
+            console.log(a.prototype.hasOwnProperty('c'));  //true
+            console.log(a.prototype.hasOwnProperty('d'));  //false
+            console.log(a.prototype.isPrototypeOf(e));     //false */
+
+            // 考点三：this
+           /*  function A(){
+                this.name = 'test1';
+                this.showName = function(){
+                    console.log(this.name);
+                }
+            }
+            function B(){
+                this.name = 'test2';
+            }
+            var a = new A();
+            var b = new B();
+            console.log(a.name);  //test1
+            console.log(b.name); //test2
+            a.showName();   //test1
+            a.showName.call(b); //test2
+            a.name = 'test3';
+            a.showName.call(b); //test2 */
+
+
+            // 考点四、变量提升
+           /*  var a = function(){
+                console.log(i);   //undefined
+                var i = 1;
+                console.log(i); //1
+            }
+            a(); */
+
+            // 考点五、let (let定义的没有变量提升)
+           /*  var a = function(){
+                console.log(i);   //Uncaught ReferenceError: i is not defined
+                let i = 1;
+                console.log(i);
+            }
+            a(); */
+            // let (作用域问题)
+            let i = 2;
+            var a = function(){
+                console.log(i);  //Uncaught ReferenceError: i is not defined
+                let i = 1;
+            }
+            a();
+
+            
+           
+        </script>
+    </body>
+</html>
