@@ -14,7 +14,7 @@
     "redux-undo": "^0.6.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set port= 10001 && react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "test": "react-scripts test"
